@@ -6,6 +6,8 @@ import (
 	"sync"
 	"strings"
 	"fmt"
+	"sort"
+	"time"
 )
 
 type KeyValue struct {
@@ -30,6 +32,7 @@ func reducer(key string, values []int) KeyValue {
 }
 
 func main() {
+	startTime := time.Now() // Start timing
 	file, _ := os.Open("input.txt")
 	defer file.Close()
 
@@ -59,8 +62,20 @@ func main() {
 	}
 
 	// Reduce phase
+	results := make([]KeyValue, 0, len(intermediate))
 	for k, v := range intermediate {
-		res := reducer(k, v)
-		fmt.Printf("%s: -> %d\n", res.Key, res.Value)
+		results = append(results, reducer(k, v));
 	}
+
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Value > results[j].Value
+	})
+
+	for _, res := range results {
+    fmt.Printf("%s: -> %d\n", res.Key, res.Value)
+}
+
+	elapsedTime := time.Since(startTime)
+	// Calculate elapsed time
+	fmt.Printf("Execution time: %v\n", elapsedTime) // Print execution time
 }

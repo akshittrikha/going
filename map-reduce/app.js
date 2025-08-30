@@ -34,6 +34,8 @@ function reducer(key, values) {
 
 // ---- Driver: Map -> Shuffle -> Reduce ----
 async function run() {
+  const startTime = performance.now(); // Start timing
+
   const rl = readline.createInterface({
     input: fs.createReadStream(inputPath, { encoding: "utf8" }),
     crlfDelay: Infinity,
@@ -67,6 +69,10 @@ async function run() {
   for (const { key, value } of results) {
     console.log(`${key} -> ${value}`);
   }
+
+  const endTime = performance.now(); // End timing
+  const executionTime = endTime - startTime;
+  console.log(`Execution time: ${executionTime.toFixed(2)} milliseconds`);
 }
 
 run().catch((err) => {
